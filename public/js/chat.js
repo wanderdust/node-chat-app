@@ -34,6 +34,7 @@ socket.on('disconnect', () => {
   console.log('Disconnected from server')
 })
 
+// Make a mustache template!
 socket.on('updateUserList', (users) => {
   let ol = jQuery('<ol></ol>');
   users.forEach( (user) => {
@@ -75,7 +76,6 @@ jQuery('#message-form').on('submit', (e) => {
   let $messageTextBox = jQuery('[name=message]')
 
   socket.emit('createMessage', {
-    from: 'User',
     text: $messageTextBox.val()
   }, () => {
     $messageTextBox.val('')
