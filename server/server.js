@@ -2,13 +2,17 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const socketIO = require('socket.io');
-const {Users} = require('./utils/users')
 
+const {Users} = require('./utils/users')
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 const {isRealString} = require('./utils/validation');
 const publicPath = path.join(__dirname, '/../public');
 const port = process.env.PORT || 3000;
+
 let app = express();
+let {mongoose} = require('./db/mongoose');
+let {User} = require('./models/users');
+let {Room} = require('./models/rooms')
 let server = http.createServer(app);
 let io = socketIO(server);
 let users = new Users();
