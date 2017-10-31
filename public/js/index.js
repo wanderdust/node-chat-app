@@ -2,8 +2,12 @@ let socket = io();
 
 let $log_in_form = jQuery('#log-in-form');
 let $new_account_form = jQuery('#new-account-form');
-let $sign_in_toggle = jQuery('.sign-in-toggle');
-let $create_account_toggle = jQuery('.create-account-toggle')
+let $room_button = jQuery('#room-button');
+let $new_room_button = jQuery('#new-room-button')
+
+//Event listeners to hide/show forms
+toggle.createAccount;
+toggle.signIn;
 
 
 socket.on('connect', () => {
@@ -23,7 +27,9 @@ socket.on('connect', () => {
       }
       //localStorage.setItem('user_name', user.email) -> instead of params
       //localStorage.setItem('room_name', $('[name=room]').val())
-      console.log( `user ${user.email} found`)
+      console.log( `user ${user.email} found`);
+      toggle.toggleForm($log_in_form);
+
     })
   })
 
@@ -41,19 +47,41 @@ socket.on('connect', () => {
       if (err) {
         return console.log(err._message)
       }
-      console.log(`user ${user.email} created`)
+      console.log(`user ${user.email} created`);
+      toggle.toggleForm($new_account_form);
+
     })
   })
+
+  $room_button.on('click', (e) => {
+    e.preventDefault();
+
+    let $existingRoom = jQuery('[name=room]').val().trim();
+
+    socket.emit('existingRoom', {
+      name: $existingRoom
+    }, (err, data) => {
+      if (err) {
+        return console.log(err)
+      }
+      console.log(data)
+    })
+
+  })
+
+  $new_room_button.on('click', (e) => {
+    e.preventDefault();
+
+    let $newRoom = jQuery('[name=new-room]').val().trim();
+
+    socket.emit('newRoom', {
+      name: $newRoom
+    }, (err, data) => {
+      if (err) {
+        return console.log(err)
+      }
+      console.log(data)
+    })
+
+  })
 });
-
-
-
-$create_account_toggle.on('click', () => {
-  $log_in_form.addClass('invisible');
-  $new_account_form.removeClass('invisible')
-})
-
-$sign_in_toggle.on('click', () => {
-  $new_account_form.addClass('invisible')
-  $log_in_form.removeClass('invisible');
-})

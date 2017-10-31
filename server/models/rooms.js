@@ -1,12 +1,11 @@
 let mongoose = require('mongoose');
 
 let RoomSchema = mongoose.Schema({
-  name: String,
-  id: String, //For now we use the Room name;
+  name: {type: String, required: true},
   body: [{
-    text: {type: String, required: true},
-    from: {type: String, required: true},
-    createdAt: {type: Number, required: true}
+    text: String,
+    from: String,
+    createdAt: Number
   }]
 });
 

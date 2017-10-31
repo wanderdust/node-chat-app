@@ -79,6 +79,23 @@ io.on('connection', (socket) => {
     }).catch(e => callback(e))
   })
 
+  socket.on('existingRoom', (room, callback) => {
+    Room.findOne({name: room.name}).then((data) => {
+      if (!data) {
+        return callback('No room found');
+      }
+      callback(null, data)
+    }).catch(e => callback(e))
+  })
+
+  socket.on('newRoom', (roomData, callback) => {
+    let room = new Room(roomData);
+
+    room.save().then((data) => {
+      callback(null, data)
+    }).catch((e) => callback(e))
+  })
+
   socket.on('disconnect', () => {
     let user = users.removeUser(socket.id);
 

@@ -49,10 +49,25 @@
         </div>
       </form>
 
-      <div class="form-field">
-        <label>Join / Create room</label>
-        <input type="text" name="room"/>
-      </div>
+      <form id="room-form" class="invisible">
+        <div class="form-field">
+          <h3>Select Room</h3>
+        </div>
+        <div class="form-field">
+          <label>Join existing room</label>
+          <input type="text" name="room"/>
+        </div>
+        <div class="form-field">
+          <label>Create new room</label>
+          <input type="text" name="new-room"/>
+        </div>
+        <div class="form-field">
+          <button type="button" id="room-button">Enter room</button>
+        </div>
+        <div class="form-field">
+          <button type="button" id="new-room-button">Create Room</button>
+        </div>
+      </form>
     </div>
 
 
@@ -60,6 +75,7 @@
     <script src="/js/libs/jquery-3.2.1.min.js"></script>
     <script src="/js/libs/mustache.js"></script>
     <script src="/js/libs/deparam.js"></script>
+    <script src="/js/utils/toggleForm.js"></script>
     <script src="/js/index.js"></script>
   </body>
 </html>
