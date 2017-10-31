@@ -59,24 +59,24 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('newUser', (userData) => {
+  socket.on('newUser', (userData, callback) => {
     let user = new User(userData);
 
     user.save().then((usr) => {
-      console.log('User saved', usr)
-    }).catch(e => console.log(e))
+      callback(null, usr)
+    }).catch(e => callback(e))
   })
 
-  socket.on('login', (userData) => {
+  socket.on('login', (userData, callback) => {
     User.findOne({
       email: userData.email,
       password: userData.password
     }).then((user) => {
       if (!user) {
-        return console.log('no user found')
+        return callback('No user found')
       }
-      console.log( `user ${user.email} found`)
-    }).catch(e => console.log(e))
+      callback(null, user)
+    }).catch(e => callback(e))
   })
 
   socket.on('disconnect', () => {

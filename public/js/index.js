@@ -17,6 +17,13 @@ socket.on('connect', () => {
     socket.emit('login', {
       email: $email,
       password: $password
+    }, (err, user) => {
+      if (err) {
+        return console.log('No user found')
+      }
+      //localStorage.setItem('user_name', user.email) -> instead of params
+      //localStorage.setItem('room_name', $('[name=room]').val())
+      console.log( `user ${user.email} found`)
     })
   })
 
@@ -30,6 +37,11 @@ socket.on('connect', () => {
     socket.emit('newUser', {
       email: $email,
       password: $password
+    }, (err, user) => {
+      if (err) {
+        return console.log(err._message)
+      }
+      console.log(`user ${user.email} created`)
     })
   })
 });
