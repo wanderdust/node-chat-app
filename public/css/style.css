@@ -193,3 +193,17 @@ button:disabled {
     margin-right: 0px;
   }
 }
+
+/* NEW FEATURES */
+
+.create-account-toggle {
+  background: red
+}
+
+.create-account-button {
+  background: red
+}
+
+.invisible {
+  display: none
+}

@@ -6,6 +6,12 @@ let UserSchema = mongoose.Schema({
     required: true,
     trim:true,
     minlength: 1
+  },
+  password: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 6
   }
 })
 

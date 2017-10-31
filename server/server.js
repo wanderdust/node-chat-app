@@ -1,4 +1,7 @@
+let {mongoose} = require('./db/mongoose');
+
 const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
 const socketIO = require('socket.io');
@@ -9,13 +12,15 @@ const {isRealString} = require('./utils/validation');
 const publicPath = path.join(__dirname, '/../public');
 const port = process.env.PORT || 3000;
 
-let app = express();
-let {mongoose} = require('./db/mongoose');
 let {User} = require('./models/users');
-let {Room} = require('./models/rooms')
+let {Room} = require('./models/rooms');
+
+let app = express();
 let server = http.createServer(app);
 let io = socketIO(server);
 let users = new Users();
+
+app.use(bodyParser.json());
 
 app.use(express.static(publicPath));
 
@@ -52,6 +57,26 @@ io.on('connection', (socket) => {
     if(user) {
       io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude))
     }
+  })
+
+  socket.on('newUser', (userData) => {
+    let user = new User(userData);
+
+    user.save().then((usr) => {
+      console.log('User saved', usr)
+    }).catch(e => console.log(e))
+  })
+
+  socket.on('login', (userData) => {
+    User.findOne({
+      email: userData.email,
+      password: userData.password
+    }).then((user) => {
+      if (!user) {
+        return console.log('no user found')
+      }
+      console.log( `user ${user.email} found`)
+    }).catch(e => console.log(e))
   })
 
   socket.on('disconnect', () => {
