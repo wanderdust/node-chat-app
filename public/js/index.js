@@ -24,15 +24,17 @@ socket.on('connect', () => {
     socket.emit('login', {
       email: $email,
       password: $password
-    }, (err, data) => {
+    }, (err, data, token) => {
       if (err) {
         return alert(err)
       }
 
+      console.log('token:', token)
       console.log( `user ${data.email} found`);
       toggle.toggleForm($log_in_form);
 
       ls_sign_in("user_name", data.email, "user_id", data._id);
+      sessionStorage.setItem('user_token', token)
     })
   })
 
@@ -48,9 +50,10 @@ socket.on('connect', () => {
       password: $password
     }, (err, data, token) => {
       if (err) {
-        if (err.code === 11000) return alert('Error: user name already exists')
+        if (err.code === 11000)
+          return alert('Error: user name already exists')
         console.log(err)
-        return alert(err)
+        //return alert(err)
       }
       console.log('token:', token)
       console.log(`user ${data.email} created`);

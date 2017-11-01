@@ -77,19 +77,24 @@ io.on('connection', (socket) => {
       return usr.generateAuthToken();
     }).then((token) => {
       callback(null, user, token)
-    }).catch((e) => callback(e))
+    }).catch((e) => {
+      callback(e)
+    })
   })
 
   socket.on('login', (userData, callback) => {
-    User.findOne({
-      email: userData.email,
-      password: userData.password
-    }).then((user) => {
-      if (!user) {
-        return callback('Error: invalid user or password')
-      }
-      callback(null, user)
-    }).catch(e => callback(e))
+    let tmp_user;
+
+    User.findByCredentials(userData.email, userData.password).then((user) => {
+
+      tmp_user = user;
+      return user.generateAuthToken()
+    }).then((token) => {
+      callback(null, tmp_user, token)
+    }).catch(e => {
+      callback(e)
+      console.log(e)
+    })
   })
 
   socket.on('existingRoom', (room, callback) => {
