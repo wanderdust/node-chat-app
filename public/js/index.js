@@ -43,14 +43,18 @@ socket.on('connect', () => {
     socket.emit('newUser', {
       email: $email,
       password: $password
-    }, (err, data) => {
+    }, (err, data, token) => {
       if (err) {
+        if (err.code === 11000) return alert('Error: user name already exists')
+        console.log(err)
         return alert(err)
       }
+      console.log('token:', token)
       console.log(`user ${data.email} created`);
       toggle.toggleForm($new_account_form);
 
       ls_sign_in("user_name", data.email, "user_id", data._id);
+      sessionStorage.setItem('user_token': token)
     })
   })
 
@@ -81,12 +85,13 @@ socket.on('connect', () => {
       name: $newRoom
     }, (err, data) => {
       if (err) {
-        return console.log(err)
+        if (err.code === 11000) return alert('Error: room name already exists')
+
+        return alert(err)
       }
       console.log(data)
       window.location.href = '/chat.html';
       ls_sign_in("room_name", data.name, "room_id", data._id);
     })
-
   })
 });

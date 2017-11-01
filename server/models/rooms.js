@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 
 let RoomSchema = mongoose.Schema({
-  name: {type: String, required: true},
+  name: {type: String, required: true, unique: true},
   body: [{
     text: String,
     from: String,
