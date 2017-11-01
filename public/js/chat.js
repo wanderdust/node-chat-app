@@ -21,10 +21,12 @@ socket.on('connect', () => {
   // let params = jQuery.deparam(window.location.search);
   let params = {};
 
-  params.user_id = localStorage.getItem('user_id');
-  params.user_name = localStorage.getItem('user_name');
-  params.room_id = localStorage.getItem('room_id');
-  params.room_name = localStorage.getItem('room_name');
+  params.user_id = sessionStorage.getItem('user_id');
+  params.user_name = sessionStorage.getItem('user_name');
+  params.room_id = sessionStorage.getItem('room_id');
+  params.room_name = sessionStorage.getItem('room_name');
+
+
 
   socket.emit('join', params, (err) => {
     if (err) {
@@ -37,7 +39,8 @@ socket.on('connect', () => {
 });
 
 socket.on('disconnect', () => {
-  console.log('Disconnected from server')
+  console.log('Disconnected from server');
+  ls_sign_out();
 })
 
 // Make a mustache template!

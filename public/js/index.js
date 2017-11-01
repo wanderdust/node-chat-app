@@ -29,8 +29,7 @@ socket.on('connect', () => {
       console.log( `user ${data.email} found`);
       toggle.toggleForm($log_in_form);
 
-      localStorage.setItem('user_name', data.email);
-      localStorage.setItem('user_id', data._id);
+      ls_sign_in("user_name", data.email, "user_id", data._id);
     })
   })
 
@@ -51,9 +50,7 @@ socket.on('connect', () => {
       console.log(`user ${data.email} created`);
       toggle.toggleForm($new_account_form);
 
-      localStorage.setItem('user_name', data.email);
-      localStorage.setItem('use_id', data._id);
-
+      ls_sign_in("user_name", data.email, "user_id", data._id);
     })
   })
 
@@ -69,10 +66,7 @@ socket.on('connect', () => {
         return console.log(err)
       }
       console.log(data)
-
-      localStorage.setItem('room_name', data.name);
-      localStorage.setItem('room_id', data._id);
-
+      ls_sign_in("room_name", data.name, "room_id", data._id);
       window.location.href = '/chat.html';
     })
 
@@ -90,11 +84,8 @@ socket.on('connect', () => {
         return console.log(err)
       }
       console.log(data)
-
       window.location.href = '/chat.html';
-
-      localStorage.setItem('room_name', data.name);
-      localStorage.setItem('room_id', data._id);
+      ls_sign_in("room_name", data.name, "room_id", data._id);
     })
 
   })
