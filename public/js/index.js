@@ -21,15 +21,16 @@ socket.on('connect', () => {
     socket.emit('login', {
       email: $email,
       password: $password
-    }, (err, user) => {
+    }, (err, data) => {
       if (err) {
         return console.log('No user found')
       }
-      //localStorage.setItem('user_name', user.email) -> instead of params
-      //localStorage.setItem('room_name', $('[name=room]').val())
-      console.log( `user ${user.email} found`);
+
+      console.log( `user ${data.email} found`);
       toggle.toggleForm($log_in_form);
 
+      localStorage.setItem('user_name', data.email);
+      localStorage.setItem('user_id', data._id);
     })
   })
 
@@ -43,12 +44,15 @@ socket.on('connect', () => {
     socket.emit('newUser', {
       email: $email,
       password: $password
-    }, (err, user) => {
+    }, (err, data) => {
       if (err) {
         return console.log(err._message)
       }
-      console.log(`user ${user.email} created`);
+      console.log(`user ${data.email} created`);
       toggle.toggleForm($new_account_form);
+
+      localStorage.setItem('user_name', data.email);
+      localStorage.setItem('use_id', data._id);
 
     })
   })
@@ -65,6 +69,11 @@ socket.on('connect', () => {
         return console.log(err)
       }
       console.log(data)
+
+      localStorage.setItem('room_name', data.name);
+      localStorage.setItem('room_id', data._id);
+
+      window.location.href = '/chat.html';
     })
 
   })
@@ -81,6 +90,11 @@ socket.on('connect', () => {
         return console.log(err)
       }
       console.log(data)
+
+      window.location.href = '/chat.html';
+
+      localStorage.setItem('room_name', data.name);
+      localStorage.setItem('room_id', data._id);
     })
 
   })

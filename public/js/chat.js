@@ -18,7 +18,13 @@ function scrollToBottom () {
 }
 
 socket.on('connect', () => {
-  let params = jQuery.deparam(window.location.search);
+  // let params = jQuery.deparam(window.location.search);
+  let params = {};
+
+  params.user_id = localStorage.getItem('user_id');
+  params.user_name = localStorage.getItem('user_name');
+  params.room_id = localStorage.getItem('room_id');
+  params.room_name = localStorage.getItem('room_name');
 
   socket.emit('join', params, (err) => {
     if (err) {
