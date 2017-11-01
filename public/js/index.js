@@ -23,7 +23,7 @@ socket.on('connect', () => {
       password: $password
     }, (err, data) => {
       if (err) {
-        return console.log('No user found')
+        return alert(err)
       }
 
       console.log( `user ${data.email} found`);
@@ -45,7 +45,7 @@ socket.on('connect', () => {
       password: $password
     }, (err, data) => {
       if (err) {
-        return console.log(err._message)
+        return alert(err)
       }
       console.log(`user ${data.email} created`);
       toggle.toggleForm($new_account_form);
@@ -63,7 +63,7 @@ socket.on('connect', () => {
       name: $existingRoom
     }, (err, data) => {
       if (err) {
-        return console.log(err)
+        return alert(err)
       }
       console.log(data)
       ls_sign_in("room_name", data.name, "room_id", data._id);

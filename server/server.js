@@ -60,11 +60,19 @@ io.on('connection', (socket) => {
   })
 
   socket.on('newUser', (userData, callback) => {
-    let user = new User(userData);
 
-    user.save().then((usr) => {
-      callback(null, usr)
-    }).catch(e => callback(e))
+    User.findOne({
+        email: userData.email
+    }).then((user) => {
+      if (user) {
+        return callback('Error: user already exists');
+      }
+      let newUserModel = new User(userData);
+
+      return newUserModel.save().then((usr) => {
+        callback(null, usr)
+      })
+    }).catch((e) => callback(e._message))
   })
 
   socket.on('login', (userData, callback) => {
@@ -73,7 +81,7 @@ io.on('connection', (socket) => {
       password: userData.password
     }).then((user) => {
       if (!user) {
-        return callback('No user found')
+        return callback('Error: invalid user or password')
       }
       callback(null, user)
     }).catch(e => callback(e))
@@ -82,18 +90,23 @@ io.on('connection', (socket) => {
   socket.on('existingRoom', (room, callback) => {
     Room.findOne({name: room.name}).then((data) => {
       if (!data) {
-        return callback('No room found');
+        return callback(`Room: "${room.name}", doesn't exist`);
       }
       callback(null, data)
     }).catch(e => callback(e))
   })
 
   socket.on('newRoom', (roomData, callback) => {
-    let room = new Room(roomData);
+    Room.findOne({name: roomData.name}).then((data) => {
+      if (data) {
+        return callback('Error: room name already exists.')
+      }
+      let newRoom = new Room(roomData);
 
-    room.save().then((data) => {
-      callback(null, data)
-    }).catch((e) => callback(e))
+      newRoom.save().then((data) => {
+        callback(null, data)
+      })
+    }).catch(e => callback(e._message))
   })
 
   socket.on('disconnect', () => {
