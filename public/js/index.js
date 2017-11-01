@@ -12,6 +12,9 @@ toggle.signIn;
 
 socket.on('connect', () => {
 
+  //Clear storage data if exists
+   ls_sign_out();
+
   $log_in_form.on('submit', (e) => {
     e.preventDefault();
 
@@ -28,7 +31,7 @@ socket.on('connect', () => {
 
       console.log( `user ${data.email} found`);
       toggle.toggleForm($log_in_form);
-  
+
       ls_sign_in("user_name", data.email, "user_id", data._id);
     })
   })
