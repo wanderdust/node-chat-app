@@ -28,18 +28,24 @@ io.on('connection', (socket) => {
   console.log('New user connected');
 
   socket.on('join', (params, callback) => {
-    if (!isRealString(params.user_name) || !isRealString(params.room_name)) {
-      return callback('Name and room are required.');
-    }
 
-    socket.join(params.room_name);
-    users.removeUser(socket.id); //Update?
-    users.addUser(socket.id, params.user_name, params.room_name)
+    // Verify user
+    User.findByToken(params.user_token).then((usr) => {
+      if (!usr) {
+        callback('User not verified')
+        console.log('User not verified')
+      }
+    }).then(() => {
+      socket.join(params.room_name);
+      users.removeUser(socket.id); //Update?
+      users.addUser(socket.id, params.user_name, params.room_name)
 
-    io.to(params.room_name).emit('updateUserList', users.getUserList(params.room_name))
-    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
-    socket.broadcast.to(params.room_name).emit('newMessage', generateMessage('Admin', `${params.user_name} has joined`));
-    callback()
+      io.to(params.room_name).emit('updateUserList', users.getUserList(params.room_name))
+      socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+      socket.broadcast.to(params.room_name).emit('newMessage', generateMessage('Admin', `${params.user_name} has joined`));
+
+      callback(null, 'User verified');
+    }).catch((e) => callback(e));
   })
 
   socket.on('createMessage', (message, callback) => {

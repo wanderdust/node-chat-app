@@ -25,17 +25,20 @@ socket.on('connect', () => {
   params.user_name = sessionStorage.getItem('user_name');
   params.room_id = sessionStorage.getItem('room_id');
   params.room_name = sessionStorage.getItem('room_name');
-  params.user_token = sessionStorage.getItem('user_token')
+  params.user_token = sessionStorage.getItem('user_token');
+
+  // if (!params.user_id || !params.user_name || !params.room_id || !params.room_name || params.user_token) {
+  //   alert('You need to sign in to start chatting')
+  //   window.location.href = '/';
+  // }
 
 
-
-  socket.emit('join', params, (err) => {
+  socket.emit('join', params, (err, data) => {
     if (err) {
-      alert(err)
-      window.location.href = '/'
-    } else {
-      console.log('No error');
+      window.location.href = '/';
+      return alert(err)
     }
+    console.log(data)
   })
 });
 

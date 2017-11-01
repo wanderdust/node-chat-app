@@ -28,7 +28,7 @@ socket.on('connect', () => {
 
       console.log( `user ${data.email} found`);
       toggle.toggleForm($log_in_form);
-
+  
       ls_sign_in("user_name", data.email, "user_id", data._id);
     })
   })
@@ -54,7 +54,7 @@ socket.on('connect', () => {
       toggle.toggleForm($new_account_form);
 
       ls_sign_in("user_name", data.email, "user_id", data._id);
-      sessionStorage.setItem('user_token': token)
+      sessionStorage.setItem('user_token', token);
     })
   })
 
