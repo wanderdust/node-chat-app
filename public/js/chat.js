@@ -17,15 +17,16 @@ function scrollToBottom () {
   }
 }
 
-socket.on('connect', () => {
-  // let params = jQuery.deparam(window.location.search);
-  let params = {};
+// let params = jQuery.deparam(window.location.search);
+let params = {};
 
-  params.user_id = sessionStorage.getItem('user_id');
-  params.user_name = sessionStorage.getItem('user_name');
-  params.room_id = sessionStorage.getItem('room_id');
-  params.room_name = sessionStorage.getItem('room_name');
-  params.user_token = sessionStorage.getItem('user_token');
+params.user_id = sessionStorage.getItem('user_id');
+params.user_name = sessionStorage.getItem('user_name');
+params.room_id = sessionStorage.getItem('room_id');
+params.room_name = sessionStorage.getItem('room_name');
+params.user_token = sessionStorage.getItem('user_token');
+
+socket.on('connect', () => {
 
   if (!params.user_id || !params.user_name || !params.room_id || !params.room_name || !params.user_token) {
     alert('You need to sign in to start chatting')
@@ -74,7 +75,7 @@ socket.on('newLocationMessage', (message) => {
   let template = jQuery('#location-message-template').html();
   let html = Mustache.render(template, {
     from: message.from,
-    url: message.url,
+    text: message.text,
     createdAt: formattedTime
   });
 
@@ -88,7 +89,8 @@ jQuery('#message-form').on('submit', (e) => {
   let $messageTextBox = jQuery('[name=message]')
 
   socket.emit('createMessage', {
-    text: $messageTextBox.val()
+    text: $messageTextBox.val(),
+    room_id:params.room_id
   }, () => {
     $messageTextBox.val('')
   })
@@ -105,6 +107,7 @@ $locationButton.on('click', () => {
   navigator.geolocation.getCurrentPosition((position) => {
     $locationButton.removeAttr('disabled').text('Send location');
     socket.emit('createLocationMessage', {
+      room_id: params.room_id,
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     })

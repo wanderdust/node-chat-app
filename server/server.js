@@ -1,5 +1,4 @@
 require('./config/config.js');
-
 let {mongoose} = require('./db/mongoose');
 
 const path = require('path');
@@ -7,6 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const socketIO = require('socket.io');
 const http = require('http');
+const {ObjectID} = require('mongodb');
 
 const {Users} = require('./utils/users')
 const {generateMessage, generateLocationMessage} = require('./utils/message');
@@ -50,20 +50,45 @@ io.on('connection', (socket) => {
     }).catch((e) => callback(e));
   })
 
-  socket.on('createMessage', (message, callback) => {
+  socket.on('createMessage', (messageData, callback) => {
     let user = users.getUser(socket.id);
+    let message = generateMessage(user.name, messageData.text)
 
-    if (user && isRealString(message.text)) {
-          io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+    // Saves message in the Room model and then sends them back.
+    if (user && isRealString(messageData.text)) {
+      Room.findByIdAndUpdate(
+        messageData.room_id,
+        {
+          $push: {
+            body: message
+          }
+      }, {
+        new: true
+      }).then((room) => {
+        io.to(room.name).emit('newMessage', room.body[room.body.length - 1])
+      }).catch(e => console.log(e))
     }
     callback();
   })
 
-  socket.on('createLocationMessage', (coords) =>  {
-    let user = users.getUser(socket.id)
+  socket.on('createLocationMessage', (messageData) =>  {
+    let user = users.getUser(socket.id);
+    let locationMessage = generateLocationMessage(user.name, messageData.latitude, messageData.longitude);
 
     if(user) {
-      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude))
+      Room.findByIdAndUpdate(
+        messageData.room_id,
+        {
+          $push: {
+            body: locationMessage
+          }
+      }, {
+        new: true
+      }).then((room) => {
+        io.to(room.name).emit('newLocationMessage', room.body[room.body.length - 1])
+      })
+
+      //io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, messageData.latitude, coords.longitude))
     }
   })
 
