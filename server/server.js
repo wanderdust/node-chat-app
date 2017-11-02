@@ -1,20 +1,20 @@
 require('./config/config.js');
-let {mongoose} = require('./db/mongoose');
+require('./db/mongoose');
 
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const path = require('path');
-const http = require('http');
 const socketIO = require('socket.io');
+const http = require('http');
 
 const {Users} = require('./utils/users')
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 const {isRealString} = require('./utils/validation');
+const {User} = require('./models/users');
+const {Room} = require('./models/rooms');
+
 const publicPath = path.join(__dirname, '/../public');
 const port = process.env.PORT;
-
-let {User} = require('./models/users');
-let {Room} = require('./models/rooms');
 
 let app = express();
 let server = http.createServer(app);
