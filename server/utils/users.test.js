@@ -10,15 +10,18 @@ describe('Users', () => {
     users.users = [{
       id: 1,
       name: 'mike',
-      room: 'node course'
+      room: 'node course',
+      token: "1231231231231231"
     }, {
       id: 2,
       name: 'Billy',
-      room: 'Buffalos'
+      room: 'Buffalos',
+      token: "1231231231231231"
     }, {
       id: 3,
       name: 'jabadoo',
-      room: 'node course'
+      room: 'node course',
+      token: "1231231231231231"
     }]
   })
 
@@ -28,9 +31,10 @@ describe('Users', () => {
     let user = {
       id: 123,
       name: 'billy',
-      room: 'the joes'
+      room: 'the joes',
+      token: "1231231231231231"
     };
-    let resUser = users.addUser(user.id, user.name, user.room);
+    let resUser = users.addUser(user.id, user.name, user.room, user.token);
 
     expect(users.users).toEqual([user])
   })
@@ -43,11 +47,13 @@ describe('Users', () => {
     expect(users.users).toEqual([{
       id: 1,
       name: 'mike',
-      room: 'node course'
+      room: 'node course',
+      token: "1231231231231231"
     }, {
       id: 3,
       name: 'jabadoo',
-      room: 'node course'
+      room: 'node course',
+      token: "1231231231231231"
     } ])
   });
 

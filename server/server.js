@@ -1,3 +1,4 @@
+require('./config/config.js');
 let {mongoose} = require('./db/mongoose');
 
 const express = require('express');
@@ -10,7 +11,7 @@ const {Users} = require('./utils/users')
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 const {isRealString} = require('./utils/validation');
 const publicPath = path.join(__dirname, '/../public');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 let {User} = require('./models/users');
 let {Room} = require('./models/rooms');
