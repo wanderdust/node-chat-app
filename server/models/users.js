@@ -40,6 +40,19 @@ UserSchema.methods.generateAuthToken = function () {
   })
 }
 
+UserSchema.methods.removeToken = function (token) {
+  let user = this;
+
+  if (user.tokens[0].token !== token)
+    return Promise.reject('Tokens are not the same')
+
+  return user.update({
+    $pull: {
+      tokens: {token}
+    }
+  })
+}
+
 UserSchema.statics.findByToken = function (token) {
   let User = this;
   let decoded;
@@ -75,6 +88,8 @@ UserSchema.statics.findByCredentials = function (email, password) {
     })
   })
 };
+
+
 
 UserSchema.pre('save', function (next) {
   let user = this;

@@ -114,6 +114,7 @@ button:disabled {
 }
 
 .chat__main {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100vh;

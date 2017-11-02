@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
     }).then(() => {
       socket.join(params.room_name);
       users.removeUser(socket.id); //Update?
-      users.addUser(socket.id, params.user_name, params.room_name)
+      users.addUser(socket.id, params.user_name, params.room_name, params.user_token)
 
       io.to(params.room_name).emit('updateUserList', users.getUserList(params.room_name))
       socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
@@ -120,7 +120,18 @@ io.on('connection', (socket) => {
     if (user) {
       io.to(user.room).emit('updateUserList', users.getUserList(user.room));
       io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`));
-    }
+
+      User.findByToken(user.token).then((userDoc) => {
+        if (!user)
+          return Promise.reject('Could not remove token from user');
+
+        return userDoc.removeToken(userDoc.tokens[0].token);
+      }).catch((e) => {
+        console.log(e)
+      })
+    };
+
+
   })
 })
 

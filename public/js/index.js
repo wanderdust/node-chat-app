@@ -13,7 +13,7 @@ toggle.signIn;
 socket.on('connect', () => {
 
   //Clear storage data if exists
-   ls_sign_out();
+   ls_clear();
 
   $log_in_form.on('submit', (e) => {
     e.preventDefault();
