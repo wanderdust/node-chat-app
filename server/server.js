@@ -1,5 +1,6 @@
 require('./config/config.js');
-require('./db/mongoose');
+
+let {mongoose} = require('./db/mongoose');
 
 const path = require('path');
 const express = require('express');
