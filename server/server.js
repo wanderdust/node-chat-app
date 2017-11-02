@@ -46,7 +46,13 @@ io.on('connection', (socket) => {
       socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
       socket.broadcast.to(params.room_name).emit('newMessage', generateMessage('Admin', `${params.user_name} has joined`));
 
-      callback(null, 'User verified');
+      //returns the current room to load conversations
+      return Room.findById(params.room_id)
+    }).then((room) => {
+      if (!room)
+        return Promise.reject('room not found')
+
+      callback(null, room)
     }).catch((e) => callback(e));
   })
 

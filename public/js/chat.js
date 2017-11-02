@@ -15,7 +15,7 @@ function scrollToBottom () {
   if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
     messages.scrollTop(scrollHeight);
   }
-}
+};
 
 // let params = jQuery.deparam(window.location.search);
 let params = {};
@@ -34,18 +34,29 @@ socket.on('connect', () => {
   }
 
 
-  socket.emit('join', params, (err, data) => {
+  socket.emit('join', params, (err, room) => {
     if (err) {
       window.location.href = '/';
       return alert(err)
     }
-    console.log(data)
+
+    // Renders saved messages once the user has been verified
+    room.body.forEach((message) => {
+      let template;
+
+      if (message.is === "message") {
+        template = jQuery('#message-template').html();
+      } else if (message.is === "location") {
+        template = jQuery('#location-message-template').html();
+      }
+      renderTemplate(template, message);
+    })
   })
 });
 
 socket.on('disconnect', () => {
   console.log('Disconnected from server');
-})
+});
 
 // Make a mustache template!
 socket.on('updateUserList', (users) => {
@@ -55,33 +66,17 @@ socket.on('updateUserList', (users) => {
   });
 
   jQuery('#users').html(ol)
-})
+});
 
 socket.on('newMessage', (message) => {
-  let formattedTime = moment(message.createdAt).format('h:mm a')
   let template = jQuery('#message-template').html();
-  let html = Mustache.render(template, {
-    text: message.text,
-    from: message.from,
-    createdAt: formattedTime
-  });
-
-  jQuery('#messages').append(html)
-  scrollToBottom();
+  renderTemplate(template, message);
 });
 
 socket.on('newLocationMessage', (message) => {
-  let formattedTime = moment(message.createdAt).format('h:mm a');
   let template = jQuery('#location-message-template').html();
-  let html = Mustache.render(template, {
-    from: message.from,
-    text: message.text,
-    createdAt: formattedTime
-  });
-
-  jQuery('#messages').append(html);
-  scrollToBottom();
-})
+  renderTemplate(template, message);
+});
 
 jQuery('#message-form').on('submit', (e) => {
   e.preventDefault();
@@ -94,7 +89,7 @@ jQuery('#message-form').on('submit', (e) => {
   }, () => {
     $messageTextBox.val('')
   })
-})
+});
 
 let $locationButton = jQuery('#send-location');
 $locationButton.on('click', () => {
@@ -115,4 +110,4 @@ $locationButton.on('click', () => {
     $locationButton.removeAttr('disabled').text('Send location')
     alert('Unable to fetch location')
   })
-})
+});
