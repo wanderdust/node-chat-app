@@ -1,5 +1,7 @@
 let socket = io();
 
+const $locationButton = jQuery('#send-location');
+
 
 function scrollToBottom () {
   // Selectors
@@ -91,7 +93,6 @@ jQuery('#message-form').on('submit', (e) => {
   })
 });
 
-let $locationButton = jQuery('#send-location');
 $locationButton.on('click', () => {
   if (!navigator.geolocation) {
     return alert('Geolocation not supported by your browser')

@@ -36,20 +36,18 @@ io.on('connection', (socket) => {
       if (!usr) {
         callback('User not verified')
       }
-    }).then(() => {
-      socket.join(params.room_name);
-      users.removeUser(socket.id); //Update?
-      users.addUser(socket.id, params.user_name, params.room_name, params.user_token)
-
-      io.to(params.room_name).emit('updateUserList', users.getUserList(params.room_name))
-      socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
-      socket.broadcast.to(params.room_name).emit('newMessage', generateMessage('Admin', `${params.user_name} has joined`));
-
       //returns the current room to load conversations
       return Room.findById(params.room_id)
     }).then((room) => {
       if (!room)
         return Promise.reject('room not found')
+
+        socket.join(params.room_name);
+        // users.removeUser(socket.id); //Update?
+        users.addUser(socket.id, params.user_name, params.room_name, params.user_token)
+        io.to(params.room_name).emit('updateUserList', users.getUserList(params.room_name))
+        socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+        socket.broadcast.to(params.room_name).emit('newMessage', generateMessage('Admin', `${params.user_name} has joined`));
 
       callback(null, room)
     }).catch((e) => callback(e));

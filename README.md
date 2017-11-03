@@ -1,4 +1,5 @@
 # Chat App
-Chat app created with node.js, express.js, and socket.io:
+Chat app created with node.js, express.js, mongodb, mongoose and socket.io.
+Includes encrypted passwords and user authentication.
 
-Try it here: https://afternoon-cliffs-42219.herokuapp.com/
+Live app: https://afternoon-cliffs-42219.herokuapp.com/

@@ -13,5 +13,3 @@ if (env === 'development') {
   process.env.MONGOLAB_URI = config.test.MONGOLAB_URI;
   process.env.JWT_SECRET = config.test.JWT_SECRET;
 }
-
-console.log('*', process.env.MONGOLAB_URI, '*')
