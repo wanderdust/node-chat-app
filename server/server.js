@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
         return Promise.reject('room not found')
 
         socket.join(params.room_name);
-        // users.removeUser(socket.id); //Update?
+        users.removeUser(socket.id);
         users.addUser(socket.id, params.user_name, params.room_name, params.user_token)
         io.to(params.room_name).emit('updateUserList', users.getUserList(params.room_name))
         socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
