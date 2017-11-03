@@ -197,13 +197,10 @@ button:disabled {
 
 /* NEW FEATURES */
 
-.create-account-toggle {
+#new-room-button, .create-account-toggle, .create-account-button {
   background: red
 }
 
-.create-account-button {
-  background: red
-}
 
 .invisible {
   display: none

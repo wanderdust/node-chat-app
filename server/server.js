@@ -35,7 +35,6 @@ io.on('connection', (socket) => {
     User.findByToken(params.user_token).then((usr) => {
       if (!usr) {
         callback('User not verified')
-        console.log('User not verified')
       }
     }).then(() => {
       socket.join(params.room_name);
@@ -93,8 +92,6 @@ io.on('connection', (socket) => {
       }).then((room) => {
         io.to(room.name).emit('newLocationMessage', room.body[room.body.length - 1])
       })
-
-      //io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, messageData.latitude, coords.longitude))
     }
   })
 
@@ -126,7 +123,6 @@ io.on('connection', (socket) => {
       callback(null, tmp_user, token)
     }).catch(e => {
       callback(e)
-      console.log(e)
     })
   })
 

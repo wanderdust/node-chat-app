@@ -20,7 +20,7 @@ describe('generateLocationMessage', () => {
     let message = generateLocationMessage('Admin', 1, 2);
 
     expect(message).toBeAn('object');
-    expect(message.url).toBe('https://www.google.com/maps?q=1,2');
+    expect(message.text).toBe('https://www.google.com/maps?q=1,2');
     expect(message.createdAt).toBeA('number')
   })
 })
